@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>WELLNEXUS - ScratchCards</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    margin: 0; padding: 2rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f8f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #2e3a31;
+    user-select: none;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+    color: #357a38;
+    font-weight: 600;
+  }
+
+  .card-container {
+    position: relative;
+    width: 320px;
+    height: 180px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(57,73,47,0.15);
+    overflow: hidden;
+    background: linear-gradient(135deg, #4caf50, #81c784);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    padding: 1rem 2rem;
+  }
+
+  #scratchCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+
+  .instructions {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: #537c50;
+  }
+
+  button#resetBtn {
+    margin-top: 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button#resetBtn:hover {
+    background-color: #357a38;
+  }
+</style>
+</head>
+<body>
+<h1>Scratch Card</h1>
+
+<div class="card-container" aria-label="Scratch card revealing a reward">
+  <div id="message">🎉 Congrats! You earned a 10% discount! 🎉</div>
+  <canvas id="scratchCanvas" width="320" height="180" aria-label="Scratch area to reveal reward"></canvas>
+</div>
+
+<div class="instructions">Scratch the gray area with your mouse or finger to reveal the message.</div>
+<button id="resetBtn" aria-label="Reset the scratch card">Reset</button>
+
+<script>
+  const canvas = document.getElementById('scratchCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const width = canvas.width;
+  const height = canvas.height;
+
+  const brushRadius = 25;
+  let isDrawing = false;
+
+  // Initialize canvas with gray overlay
+  function initCanvas() {
+    ctx.fillStyle = '#bbbbbb';
+    ctx.fillRect(0, 0, width, height);
+
+    // overlay "Scratch Here" text 
+    ctx.fillStyle = '#666666';
+    ctx.font = 'bold 28px Poppins, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Scratch Here', width/2, height/2);
+  }
+
+  // Scratch effect using destination-out compositing
+  function scratch(x, y) {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, brushRadius, 0, Math.PI*2, false);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function getPointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    } else {
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+  }
+
+  // Events
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    const pos = getPointerPos(e);
+    scratch(pos.x, pos.y);
+  });
+
+  canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    const pos = getPointerPos(e);
+    scratch(pos.x, pos.y);
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing) return;
+    const pos = getPointerPos(e);
+    scratch(pos.x, pos.y);
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (!isDrawing) return;
+    const pos = getPointerPos(e);
+    scratch(pos.x, pos.y);
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+  });
+  canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+  });
+
+  // Reset button
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    initCanvas();
+  });
+
+  // Initialize on load
+  initCanvas();
+</script>
+</body>
+</html>

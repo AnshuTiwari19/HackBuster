@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grocery List Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9faf9;
+    margin: 0;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #2e3a31;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+    color: #4caf50;
+    font-weight: 600;
+  }
+
+  .grocery-container {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(57,73,47,0.12);
+    padding: 1.5rem 2rem;
+  }
+
+  form {
+    display: flex;
+    gap: 1rem;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: 2px solid #e0e4dd;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 8px #81c784;
+  }
+
+  button {
+    background-color: #ffffff;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #357a38;
+  }
+
+  ul {
+    list-style: none;
+    margin-top: 1.5rem;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f8f5;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #2e3a31;
+  }
+
+  li.completed {
+    text-decoration: line-through;
+    color: #8bc58b;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .actions button {
+    background-color: transparent;
+    color: #4caf50;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    padding: 0;
+  }
+
+  .actions button:hover {
+    color: #357a38;
+  }
+</style>
+</head>
+<body>
+
+<h1>Grocery List Generator</h1>
+<div class="grocery-container" role="region" aria-label="Grocery list generator">
+  <form id="groceryForm" aria-label="Add grocery item form">
+    <input type="text" id="itemInput" placeholder="Add grocery item" aria-label="Grocery item input" required />
+    <button type="submit" aria-label="Add item button">Add</button>
+  </form>
+
+  <ul id="groceryList" aria-live="polite" aria-relevant="additions removals"></ul>
+</div>
+
+<script>
+  const groceryForm = document.getElementById('groceryForm');
+  const itemInput = document.getElementById('itemInput');
+  const groceryList = document.getElementById('groceryList');
+
+  // Store items in-memory
+  let items = [];
+
+  // Render grocery list items
+  function renderList() {
+    groceryList.innerHTML = '';
+    if(items.length === 0) {
+      const emptyMsg = document.createElement('p');
+      emptyMsg.textContent = 'Your grocery list is empty.';
+      emptyMsg.style.color = '#777';
+      emptyMsg.style.textAlign = 'center';
+      groceryList.appendChild(emptyMsg);
+      return;
+    }
+
+    items.forEach((item, index) => {
+      const li = document.createElement('li');
+      if(item.completed) {
+        li.classList.add('completed');
+      }
+      li.textContent = item.name;
+
+      const actions = document.createElement('div');
+      actions.classList.add('actions');
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.setAttribute('aria-label', item.completed ? 'Mark as not bought' : 'Mark as bought');
+      toggleBtn.innerHTML = item.completed ? '⟳' : '✓';
+      toggleBtn.title = item.completed ? 'Mark as not bought' : 'Mark as bought';
+      toggleBtn.addEventListener('click', () => {
+        items[index].completed = !items[index].completed;
+        renderList();
+      });
+
+      const removeBtn = document.createElement('button');
+      removeBtn.setAttribute('aria-label', 'Remove item');
+      removeBtn.innerHTML = '✕';
+      removeBtn.title = 'Remove item';
+      removeBtn.addEventListener('click', () => {
+        items.splice(index, 1);
+        renderList();
+      });
+
+      actions.appendChild(toggleBtn);
+      actions.appendChild(removeBtn);
+      li.appendChild(actions);
+      groceryList.appendChild(li);
+    });
+  }
+
+  groceryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let newItem = itemInput.value.trim();
+    if(!newItem) return;
+    items.push({ name: newItem, completed: false });
+    itemInput.value = '';
+    renderList();
+  });
+
+  // Initial render
+  renderList();
+</script>
+
+</body>
+</html>

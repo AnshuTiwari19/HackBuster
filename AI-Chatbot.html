@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WELLNEXUS Gym Chatbot</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f8f5;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    user-select: none;
+  }
+
+  .chatbot-container {
+    width: 400px;
+    max-width: 95vw;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(57,73,47,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    background: linear-gradient(90deg, #2c3d2c, #81c784);
+    padding: 1.2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .chat-area {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background: #e8f0e9;
+  }
+
+  .message {
+    max-width: 70%;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1.2rem;
+    border-radius: 20px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+
+  .message.user {
+    background-color: #4caf50;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+  }
+
+  .message.bot {
+    background-color: white;
+    color: #2e3a31;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 3px 6px rgba(57,73,47,0.1);
+  }
+
+  .input-area {
+    display: flex;
+    border-top: 1px solid #d0d7c4;
+  }
+
+  .input-area input {
+    flex: 1;
+    border: none;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border-radius: 0 0 0 16px;
+    outline: none;
+  }
+
+  .input-area button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 0 20px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0 0 16px 0;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .input-area button:hover {
+    background-color: #283728;
+  }
+
+  .input-area button:disabled {
+    background-color: #344534;
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+<div class="chatbot-container" role="region" aria-label="Gym and Fitness Chatbot">
+  <header>WELLNEXUS Assistant</header>
+  <div class="chat-area" id="chatArea" aria-live="polite" aria-relevant="additions"></div>
+  <form class="input-area" id="chatForm" aria-label="Send a message to the chatbot">
+    <input type="text" id="userInput" placeholder="Ask me about workouts, nutrition..." aria-label="Message input" autocomplete="off" required />
+    <button type="submit" aria-label="Send message">➤</button>
+  </form>
+</div>
+
+<script>
+  const chatArea = document.getElementById('chatArea');
+  const chatForm = document.getElementById('chatForm');
+  const userInput = document.getElementById('userInput');
+
+  // Predefined Q&A pairs with keywords for simple matching
+  const responses = [
+    {
+      keywords: ['workout', 'exercise', 'training'],
+      reply: "Regular workouts improve your health! What type of training are you interested in? Cardio, strength, flexibility?"
+    },
+    {
+      keywords: ['nutrition', 'diet', 'food', 'protein', 'calories'],
+      reply: "A balanced diet is key. Include proteins, veggies, and stay hydrated. Would you like a personalized nutrition plan?"
+    },
+    {
+      keywords: ['gym', 'membership', 'hours', 'open', 'close'],
+      reply: "Our gym is open from 6 AM to 10 PM every day. Feel free to visit anytime during working hours!"
+    },
+    {
+      keywords: ['rest', 'recovery', 'muscle soreness'],
+      reply: "Rest days are important to let your muscles recover. Make sure to get quality sleep and stretch regularly."
+    },
+    {
+      keywords: ['lose weight', 'weight loss', 'fat burning'],
+      reply: "To lose weight, focus on calorie deficit, regular cardio, and strength training. Need help with a plan?"
+    },
+    {
+      keywords: ['gaining muscle', 'muscle gain', 'bulk'],
+      reply: "Muscle gain requires consistent strength training and eating sufficient protein. Shall I share some workout ideas?"
+    },
+    {
+      keywords: ['hello', 'hi', 'hey'],
+      reply: "Hello! How can I assist you today with your fitness journey?"
+    },
+    {
+      keywords: ['thanks', 'thank you'],
+      reply: "You're welcome! I'm here if you need anything else."
+    }
+  ];
+
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender);
+    msgDiv.textContent = text;
+    chatArea.appendChild(msgDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function findResponse(message) {
+    const msg = message.toLowerCase();
+    for (const pair of responses) {
+      for (const keyword of pair.keywords) {
+        if (msg.includes(keyword)) {
+          return pair.reply;
+        }
+      }
+    }
+    return "I'm sorry, I don't have an answer for that yet. Try asking about workouts, nutrition, or gym info!";
+  }
+
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const userMsg = userInput.value.trim();
+    if (!userMsg) return;
+
+    addMessage(userMsg, 'user');
+    userInput.value = '';
+    userInput.disabled = true;
+    chatForm.querySelector('button').disabled = true;
+
+    // Simulate "thinking" delay
+    setTimeout(() => {
+      const botReply = findResponse(userMsg);
+      addMessage(botReply, 'bot');
+      userInput.disabled = false;
+      chatForm.querySelector('button').disabled = false;
+      userInput.focus();
+    }, 700);
+  });
+
+  // Greet user automatically
+  window.onload = () => {
+    addMessage("Hi! I'm your WELLNEXUS fitness assistant. Ask me anything about workouts, nutrition, or gym info.", 'bot');
+  };
+</script>
+</body>
+</html>

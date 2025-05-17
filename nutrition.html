@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nutrition Plan Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, select {
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 200px;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      width: fit-content; 
+    }
+  </style>
+</head>
+<body>
+  <h2>Nutrition Plan Generator</h2>
+  <form id="planForm">
+    Age: <br><input type="number" id="age" required><br>
+    Gender: <br>
+    <select id="gender" required>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select><br>
+    Height (cm): <br><input type="number" id="height" required><br>
+    Weight (kg): <br><input type="number" id="weight" required><br>
+    Goal: <br>
+    <select id="goal">
+      <option value="maintain">Maintain</option>
+      <option value="lose">Lose Weight</option>
+      <option value="gain">Gain Muscle</option>
+    </select><br>
+    Activity Level: <br>
+    <select id="activity">
+      <option value="sedentary">Sedentary</option>
+      <option value="light">Light</option>
+      <option value="moderate">Moderate</option>
+      <option value="active">Active</option>
+      <option value="super active">Super Active</option>
+    </select><br>
+
+    <button type="submit">Generate Plan</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("planForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const age = parseInt(document.getElementById("age").value);
+      const gender = document.getElementById("gender").value;
+      const height = parseFloat(document.getElementById("height").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const goal = document.getElementById("goal").value;
+      const activity = document.getElementById("activity").value;
+
+      let bmr = gender === "male"
+        ? 10 * weight + 6.25 * height - 5 * age + 5
+        : 10 * weight + 6.25 * height - 5 * age - 161;
+
+      const activityFactors = {
+        "sedentary": 1.2,
+        "light": 1.375,
+        "moderate": 1.55,
+        "active": 1.725,
+        "super active": 1.9
+      };
+
+      let tdee = bmr * activityFactors[activity];
+
+      let finalCalories = goal === "lose" ? tdee - 500
+                       : goal === "gain" ? tdee + 300
+                       : tdee;
+
+      // Macronutrients
+      const protein = Math.round((0.3 * finalCalories) / 4);
+      const fats = Math.round((0.25 * finalCalories) / 9);
+      const carbs = Math.round((0.45 * finalCalories) / 4);
+
+      document.getElementById("result").innerHTML = `
+        <h3>Your Nutrition Plan</h3>
+        <p><strong>BMR:</strong> ${Math.round(bmr)} kcal/day</p>
+        <p><strong>TDEE:</strong> ${Math.round(tdee)} kcal/day</p>
+        <p><strong>Calorie Goal:</strong> ${Math.round(finalCalories)} kcal/day</p>
+        <h4>Macronutrients</h4>
+        <ul>
+          <li>Protein: ${protein}g</li>
+          <li>Fats: ${fats}g</li>
+          <li>Carbs: ${carbs}g</li>
+        </ul>
+      `;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WELLNEXUS - Performance Tracker</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f8f5;
+      margin: 0; padding: 0;
+      color: #2e3a31;
+    }
+    header {
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      padding: 1.5rem 2rem;
+      color: white;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      user-select: none;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .summary-cards {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(57,73,47,0.12);
+      flex: 1 1 220px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .card h3 {
+      font-size: 2rem;
+      margin: 0 0 0.3rem 0;
+      color: #4caf50;
+    }
+    .card p {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #536d5f;
+      user-select: none;
+    }
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.8rem 2rem;
+      box-shadow: 0 6px 12px rgba(57,73,47,0.12);
+      margin-bottom: 2.5rem;
+    }
+    section h2 {
+      margin-top: 0;
+      font-weight: 600;
+      color: #357a38;
+      user-select: none;
+    }
+    canvas {
+      width: 100% !important;
+      max-height: 320px;
+    }
+
+    @media (max-width: 600px) {
+      .summary-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        flex: none;
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>WELLNEXUS - Performance Tracker</h1>
+  </header>
+  <main>
+    <div class="summary-cards" aria-label="Performance Summary Cards">
+      <div class="card" role="region" aria-labelledby="workouts-title">
+        <h3 id="workouts-count">18</h3>
+        <p id="workouts-title">Workouts Completed</p>
+      </div>
+      <div class="card" role="region" aria-labelledby="calories-title">
+        <h3 id="calories-count">12,450</h3>
+        <p id="calories-title">Calories Burned</p>
+      </div>
+      <div class="card" role="region" aria-labelledby="hours-title">
+        <h3 id="hours">15.2</h3>
+        <p id="hours-title">Hours Trained</p>
+      </div>
+    </div>
+
+    <section aria-label="Weekly Workout Duration Chart">
+      <h2>Weekly Workout Duration (hours)</h2>
+      <canvas id="workoutChart" role="img" aria-describedby="workoutChartDesc"></canvas>
+      <p id="workoutChartDesc" class="visually-hidden">Line chart showing workout hours per day for the past week.</p>
+    </section>
+
+    <section aria-label="Monthly Calories Burned Chart">
+      <h2>Monthly Calories Burned</h2>
+      <canvas id="calorieChart" role="img" aria-describedby="calorieChartDesc"></canvas>
+      <p id="calorieChartDesc" class="visually-hidden">Bar chart showing total calories burned each week in the current month.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Sample data
+    const weeklyWorkoutHours = [1.2, 1.5, 2.0, 1.0, 1.8, 2.5, 2.2];
+    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    const monthlyCalories = [3200, 4100, 3750, 4300];
+    const weeksOfMonth = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+
+    // Chart for workout duration
+    const ctxWorkout = document.getElementById('workoutChart').getContext('2d');
+    const workoutChart = new Chart(ctxWorkout, {
+      type: 'line',
+      data: {
+        labels: daysOfWeek,
+        datasets: [{
+          label: 'Hours',
+          data: weeklyWorkoutHours,
+          backgroundColor: 'rgba(76, 175, 80, 0.2)',
+          borderColor: '#4caf50',
+          borderWidth: 3,
+          fill: true,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 4,
+            title: { display: true, text: 'Hours' }
+          }
+        }
+      }
+    });
+
+    // Chart for calories burned
+    const ctxCalorie = document.getElementById('calorieChart').getContext('2d');
+    const calorieChart = new Chart(ctxCalorie, {
+      type: 'bar',
+      data: {
+        labels: weeksOfMonth,
+        datasets: [{
+          label: 'Calories Burned',
+          data: monthlyCalories,
+          backgroundColor: '#81c784',
+          borderRadius: 6,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Calories' }
+          }
+        }
+      }
+    });
+
+  </script>
+  <style>
+    /* Screen-reader only text for accessibility */
+    .visually-hidden {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+      white-space: nowrap;
+    }
+  </style>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!-- Dashboard Section -->
+  <section id="dashboard" class="section">
+    <h2>Dashboard</h2>
+    <div class="dashboard-widgets">
+      <a href="performance.html" style="text-decoration: none;">
+
+      <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f7f9fb;
+      color: #333;
+    }
+
+    .navbar {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .section {
+      padding: 2rem;
+      margin: 1rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+
+    .dashboard-widgets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .widget {
+      padding: 1.5rem;
+      background: #eaf2f8;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    form {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input, select, button {
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #27ae60;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #219150;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #chatWindow {
+      height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1rem;
+      overflow-y: auto;
+      background-color: #f1f1f1;
+    }
+
+    #userInput {
+      padding: 0.7rem;
+    }
+
+    #groceryList, #nutritionResult, #moodMusicResult {
+      margin-top: 1rem;
+      background-color: #eef;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+  </style>
+  <button style="
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #eaf2f8;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #2c3e50;
+  ">
+    Performance Tracker📅
+  </button>
+</a>
+
+       <a href="workout.html" style="text-decoration: none;">
+  <button style="
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #eaf2f8;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #2c3e50;
+  ">
+    Workout Streaks 🔥
+  </button>
+</a>
+ <a href="scratchcards.html" style="text-decoration: none;">
+  <button style="
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #eaf2f8;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #2c3e50;
+  ">
+   Scratch Card 🎁
+  </button>
+</a><a href="attendence.html" style="text-decoration: none;">
+  <button style="
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #eaf2f8;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #2c3e50;
+  ">
+   Attendance Tracker 📅
+  </button>
+</a>
+     
+    </div>
+  </section>

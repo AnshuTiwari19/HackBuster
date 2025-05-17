@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness & Nutrition Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .section {
+            padding: 2rem;
+            background-color: white;
+            margin: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-widgets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .widget {
+            background-color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        form {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        form input, form select, form button {
+            padding: 0.7rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        form button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #219150;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        #chatWindow {
+            height: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #fafafa;
+        }
+
+        #userInput {
+            padding: 0.7rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #groceryList, #nutritionResult, #moodMusicResult {
+            margin-top: 1rem;
+            background-color: #eef;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <h1>WellNexus</h1>
+        <ul>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#workouts">Workouts</a></li>
+            <li><a href="#nutrition">Smart Nutrition</a></li>
+            <li><a href="#grocery">Grocery List</a></li>
+            <li><a href="#chatbot">ChatBot</a></li>
+        </ul>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section">
+        <h2>Dashboard</h2>
+        <div class="dashboard-widgets">
+            <div class="widget" id="performanceTracker">Performance Tracker</div>
+            <div class="widget" id="streaks">Workout Streaks 🔥</div>
+            <div class="widget" id="scratchCard">Scratch Card 🎁</div>
+            <div class="widget" id="attendance">Attendance Tracker 📅</div>
+        </div>
+    </section>
+
+    <!-- Workout and Mood Music -->
+    <section id="workouts" class="section">
+        <h2>Workout Plans & Mood Music</h2>
+        <form id="moodForm">
+            <label for="mood">Your Mood:</label>
+            <select id="mood">
+                <option value="happy">Happy</option>
+                <option value="sad">Sad</option>
+                <option value="angry">Angry</option>
+                <option value="tired">Tired</option>
+                <option value="anxious">Anxious</option>
+            </select>
+            <button type="submit">Get Music 🎶</button>
+        </form>
+        <div id="moodMusicResult"></div>
+    </section>
+
+    <!-- Smart Nutrition Section -->
+    <section id="nutrition" class="section">
+        <h2>Smart Nutrition Plan</h2>
+        <form id="nutritionForm">
+            <input type="number" name="age" placeholder="Age" required>
+            <input type="number" name="weight" placeholder="Weight (kg)" required>
+            <input type="number" name="height" placeholder="Height (cm)" required>
+            <select name="goal">
+                <option value="weight_loss">Weight Loss</option>
+                <option value="muscle_gain">Muscle Gain</option>
+                <option value="maintenance">Maintenance</option>
+            </select>
+            <button type="submit">Generate Plan</button>
+        </form>
+        <div id="nutritionResult"></div>
+    </section>
+
+    <!-- Grocery List Generator -->
+    <section id="grocery" class="section">
+        <h2>Grocery List Generator 🛒</h2>
+        <button onclick="generateGroceryList()">Generate List</button>
+        <div id="groceryList"></div>
+    </section>
+
+    <!-- AI ChatBot Section -->
+    <section id="chatbot" class="section">
+        <h2>Chat with FitAI 🤖</h2>
+        <div class="chat-container">
+            <div id="chatWindow"></div>
+            <input type="text" id="userInput" placeholder="Ask something...">
+            <button onclick="sendChat()">Send</button>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
